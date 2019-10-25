@@ -1,0 +1,87 @@
+import pygame
+import sys
+
+from mario import Mario
+
+WINDOWWIDTH = 900
+WINDOWHEIGHT = 600
+
+# Set up colors
+WHITE = pygame.Color("#FFFFFF")
+BLUE = pygame.Color("#008080")
+
+player = Mario(WINDOWWIDTH/2, WINDOWHEIGHT/2)
+
+MOVESPEED = 1
+
+pygame.init()
+surf = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
+pygame.display.set_caption('mario')
+
+# font = pygame.font.Font(None, 48)
+
+running = True
+
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            # Quit
+            if event.key == pygame.K_q:
+                running = False
+                pygame.quit()
+                sys.exit()
+            # Move Left
+            elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                player.moveRight = False
+                player.moveLeft = True
+                print('l')
+
+            # Move Right
+            elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                player.moveLeft = False
+                player.moveRight = True
+                print('r')
+
+            # Run / Shoot Fire
+            elif event.key == pygame.KMOD_LSHIFT:
+                MOVESPEED *= 2
+                # if player.isFire == True:
+                #     shootFire()
+                print('running')
+
+            # Jump (Add short vs small jump)
+            elif event.key == pygame.K_SPACE or pygame.K_w:
+                # print('jump')
+                pass
+            # Crouch
+            elif event.key == pygame.K_DOWN or pygame.K_s:
+                print('crouch')
+
+        elif event.type == pygame.KEYUP:
+            # Stop moving Left
+            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                player.moveLeft = False
+                print('stop')
+
+            # Stop moving Right
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                player.moveRight = False
+                print('stop')
+
+            # Stop moving up
+            if event.key == pygame.K_UP or event.key == pygame.K_w:
+                player.moveUp = False
+                print('stop')
+
+            # Stop crouching
+            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                player.moveDown = False
+                print('stop')
+
+    surf.fill(BLUE)
+
+    pygame.draw.rect(surf, WHITE, player)
+    player.update()
+
+    pygame.display.update()
