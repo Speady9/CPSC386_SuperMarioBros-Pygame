@@ -1,7 +1,9 @@
 import pygame
 import sys
 
+# from fireball import Fireball
 from mario import Mario
+from mario import Platform
 
 WINDOWWIDTH = 900
 WINDOWHEIGHT = 600
@@ -9,16 +11,29 @@ WINDOWHEIGHT = 600
 # Set up colors
 WHITE = pygame.Color("#FFFFFF")
 BLUE = pygame.Color("#008080")
+PURPLE = pygame.Color("#800080")
 
-player = Mario(WINDOWWIDTH/2, WINDOWHEIGHT/2)
+mario = Mario(WINDOWWIDTH/2, WINDOWHEIGHT/2, 16, 16)
+platform1 = Platform(0, WINDOWHEIGHT - 40, WINDOWWIDTH, 40)
+platform2 = Platform(WINDOWWIDTH / 2 - 50, WINDOWHEIGHT *3/4, 100, 20)
 
-MOVESPEED = 1
 
 pygame.init()
 surf = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
 pygame.display.set_caption('mario')
 
 # font = pygame.font.Font(None, 48)
+
+# Sprite Lists
+mario_list = pygame.sprite.Group()  # user
+platform_list = pygame.sprite.Group()  # platforms
+all_sprites_list = pygame.sprite.Group()
+fireball_list = pygame.sprite.Group()  # fireball
+
+all_sprites_list.add(mario)
+all_sprites_list.add(platform1)
+platform_list.add(platform1)
+platform_list.add(platform2)
 
 running = True
 
@@ -33,55 +48,64 @@ while running:
                 sys.exit()
             # Move Left
             elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                player.moveRight = False
-                player.moveLeft = True
+                mario.moveRight = False
+                mario.moveLeft = True
                 print('l')
 
             # Move Right
             elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                player.moveLeft = False
-                player.moveRight = True
+                mario.moveLeft = False
+                mario.moveRight = True
                 print('r')
 
             # Run / Shoot Fire
-            elif event.key == pygame.KMOD_LSHIFT:
-                MOVESPEED *= 2
-                # if player.isFire == True:
-                #     shootFire()
-                print('running')
+            elif event.key == pygame.K_LSHIFT:
+                # if player.isFire:
+                # Create fireball
+                # fireball = Fireball()
+                # fireball.rect.x = mario.rect.x
+                # fireball.rect.y = mario.rect.y
+                # fireball_list.add(fireball)
+                print('running/shoot fire')
 
-            # Jump (Add short vs small jump)
-            elif event.key == pygame.K_SPACE or pygame.K_w:
-                # print('jump')
-                pass
-            # Crouch
-            elif event.key == pygame.K_DOWN or pygame.K_s:
+            elif event.key == pygame.K_UP or event.key == pygame.K_SPACE or event.key == pygame.K_w:
+                mario.jump()
+                print('jump')
+
+            elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 print('crouch')
 
         elif event.type == pygame.KEYUP:
             # Stop moving Left
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                player.moveLeft = False
-                print('stop')
+                mario.moveLeft = False
 
             # Stop moving Right
-            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                player.moveRight = False
-                print('stop')
+            elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                mario.moveRight = False
 
             # Stop moving up
-            if event.key == pygame.K_UP or event.key == pygame.K_w:
-                player.moveUp = False
-                print('stop')
+            elif event.key == pygame.K_UP or event.key == pygame.K_w:
+                mario.moveUp = False
 
             # Stop crouching
-            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                player.moveDown = False
-                print('stop')
+            elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                mario.moveDown = False
+
+    all_sprites_list.update()
 
     surf.fill(BLUE)
 
-    pygame.draw.rect(surf, WHITE, player)
-    player.update()
+    pygame.draw.rect(surf, PURPLE, platform1)
+    pygame.draw.rect(surf, PURPLE, platform2)
+    pygame.draw.rect(surf, WHITE, mario)
+    mario.update()
+
+    # all_sprites_list.draw(surf)
+
+    hits = pygame.sprite.spritecollide(mario, platform_list, False)
+    if hits:
+        mario.pos.y = hits[0].rect.top
+        mario.vel.y = 0
 
     pygame.display.update()
