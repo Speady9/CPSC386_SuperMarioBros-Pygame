@@ -109,6 +109,9 @@ while running:
             elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 mario.moveDown = False
 
+            elif event.key == pygame.K_UP or event.key == pygame.K_SPACE or event.key == pygame.K_w:
+                mario.jump_cut()
+
     all_sprites_list.update()
 
     surf.fill(BLUE)
@@ -126,8 +129,10 @@ while running:
     if mario.vel.y > 0:
         hits = pygame.sprite.spritecollide(mario, platform_list, False)
         if hits:
-            mario.pos.y = hits[0].rect.top
-            mario.vel.y = 0
+            if mario.pos.y < hits[0].rect.bottom:
+                mario.pos.y = hits[0].rect.top
+                mario.vel.y = 0
+                mario.jumping = False
 
     if mario.rect.top > 900:
         mario.die()
