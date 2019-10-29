@@ -14,9 +14,16 @@ BLUE = pygame.Color("#008080")
 PURPLE = pygame.Color("#800080")
 
 mario = Mario(WINDOWWIDTH/2, WINDOWHEIGHT/2, 16, 16)
-platform1 = Platform(0, WINDOWHEIGHT - 40, WINDOWWIDTH, 40)
-platform2 = Platform(WINDOWWIDTH / 2 - 50, WINDOWHEIGHT *3/4, 100, 20)
+platform1 = Platform(0, WINDOWHEIGHT - 40, 600, 40)
+platform2 = Platform(WINDOWWIDTH / 2 - 50, WINDOWHEIGHT * 3/4, 100, 20)
+platform3 = Platform(75, WINDOWHEIGHT - 300, 150, 20)
+platform4 = Platform(575, 100, 150, 20)
 
+# create a list of platforms instead of indivually
+# platform_Collection = [(0, WINDOWHEIGHT - 40, WINDOWWIDTH, 40),
+#                        (WINDOWWIDTH / 2 - 50, WINDOWHEIGHT *3/4, 100, 20),
+#                        (75, WINDOWHEIGHT - 300, 150, 20),
+#                        (575, 300, 150, 20)]
 
 pygame.init()
 surf = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
@@ -32,8 +39,18 @@ fireball_list = pygame.sprite.Group()  # fireball
 
 all_sprites_list.add(mario)
 all_sprites_list.add(platform1)
+all_sprites_list.add(platform2)
+all_sprites_list.add(platform3)
+all_sprites_list.add(platform4)
 platform_list.add(platform1)
 platform_list.add(platform2)
+platform_list.add(platform3)
+platform_list.add(platform4)
+
+# for plat in platform_Collection:
+#     p = Platform(*plat)
+#     all_sprites_list.add(p)
+#     platform_list.add(p)
 
 running = True
 
@@ -98,14 +115,21 @@ while running:
 
     pygame.draw.rect(surf, PURPLE, platform1)
     pygame.draw.rect(surf, PURPLE, platform2)
+    pygame.draw.rect(surf, PURPLE, platform3)
+    pygame.draw.rect(surf, PURPLE, platform4)
     pygame.draw.rect(surf, WHITE, mario)
     mario.update()
 
     # all_sprites_list.draw(surf)
 
-    hits = pygame.sprite.spritecollide(mario, platform_list, False)
-    if hits:
-        mario.pos.y = hits[0].rect.top
-        mario.vel.y = 0
+    # allows for player to land on top of platforms
+    if mario.vel.y > 0:
+        hits = pygame.sprite.spritecollide(mario, platform_list, False)
+        if hits:
+            mario.pos.y = hits[0].rect.top
+            mario.vel.y = 0
+
+    if mario.rect.top > 900:
+        mario.die()
 
     pygame.display.update()
