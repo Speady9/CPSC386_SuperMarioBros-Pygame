@@ -12,8 +12,9 @@ class Mario(Sprite):
         # initialize
         self.width = width
         self.height = height
-        self.inAir = False
+        self.onGround = True
         self.crouching = False
+        self.jumping = False
 
         # variables for jumping
         self.velX, self.velY = 0, 0
@@ -62,6 +63,7 @@ class Mario(Sprite):
         isBig = False
         isFire = False
         isStar = False
+        pygame.transform.scale(self.rect, (16, 16))
 
     def becomeBig(self):
         isSmall = False
@@ -69,21 +71,32 @@ class Mario(Sprite):
         isFire = False
         isStar = False
 
+        # Should transform mario into a bigger rect.
+        pygame.transform.scale(self.rect, (16, 32))
+
+    # Add allowing to shoot fireballs
     def becomeFire(self):
         isSmall = False
         isBig = False
         isFire = True
         isStar = False
 
+    # Add no damage from collisions (should set a timer for it to run out)
     def becomeStar(self):
         isSmall = False
         isBig = False
         isFire = False
         isStar = True
 
+    def jump_cut(self):
+        if self.jumping:
+            if self.vel.y < float(.00025):
+                self.vel.y = float(.00025)
+
     def jump(self):
-        # need to add only jumping while standing on the ground
-        self.vel.y = float(-.25)
+        if not self.jumping:
+            self.vel.y = float(-.25)
+            self.jumping = True
 
     def shootFire(self):  # make a separate class for the obj
         pass
@@ -97,8 +110,9 @@ class Mario(Sprite):
         if self.isFire:
             self.becomeBig()
 
+    # reset the player to the mid of the screen change to when colliding with enemy sprites
     def die(self):
-        pass
+        self.pos = (900/2, 600/2)
 
     def win(self):
         pass
@@ -107,7 +121,7 @@ class Mario(Sprite):
         r = self.rect
 
         # movement speed
-        self.acc = vec2(0, float(.00025))  #  Y affects gravity
+        self.acc = vec2(0, float(.00025))  # Y affects gravity
 
         if self.moveDown and r.bottom < 600:
             r.centery += self.velX
