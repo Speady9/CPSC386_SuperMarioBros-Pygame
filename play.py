@@ -4,7 +4,7 @@ import pygame
 
 from settings import Settings
 from goomba import Goomba
-from koopa import  Koopa
+from koopa import Koopa
 import game_functions as gf
 
 
