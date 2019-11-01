@@ -4,7 +4,7 @@ Super Mario Bros. recreated in Python using Pycharm/Pygame.
 ## To-do list:
 ☑ Extract sprites 
 
-☐ Create Mario and enemies, using classes and definitions.
+☑ Create Mario and enemies, using classes and definitions.
 
 ☐ Implement map scrolling and collisions.
 
