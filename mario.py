@@ -5,7 +5,7 @@ vec2 = pygame.math.Vector2
 
 class Mario(Sprite):
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, x=0, y=0, width=0, height=0):
         # call parent class
         pygame.sprite.Sprite.__init__(self)
 
