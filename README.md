@@ -2,9 +2,13 @@
 Super Mario Bros. recreated in Python using Pycharm/Pygame.
 
 Created by Team "Orange":
+
 -Hunter Gerace
+
 -Alexander Jacques
+
 -Cuong Nguyen
+
 -Jarrel Olivares
 
 ## To-do list:
